@@ -10,7 +10,7 @@
 
 
 
-\[!\[Live Demo](https://img.shields.io/badge/Live\_Demo-Visit\_Site-00e676?style=for-the-badge\&logo=github)](https://CentiFore.github.io/devpocket/)
+\[!\[Live Demo](https://img.shields.io/badge/Live\_Demo-Visit\_Site-00e676?style=for-the-badge\&logo=github)](https:/centifore.github.io/devpocket/)
 
 \[!\[MIT License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
