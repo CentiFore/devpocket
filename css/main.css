@@ -1,0 +1,290 @@
+/* ============================================================
+   DEVPOCKET — main.css
+   1win Style: Neon Green + Electric Blue + Deep Black
+   ============================================================ */
+
+/* ---------- 1. CSS DEĞİŞKENLERİ (TEMA) ---------- */
+:root {
+  /* Renkler — Dark (Varsayılan) */
+  --bg-primary: #0a0a0c;       /* Çok koyu, neredeyse siyah */
+  --bg-secondary: #131316;     /* Kart ve panel arka planı */
+  --bg-elevated: #1c1c21;      /* Input ve hover alanları */
+  --bg-hover: #26262e;
+  --border: #2a2a32;
+  --border-strong: #3f3f4a;
+
+  /* Yazılar */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0bc;
+  --text-muted: #7a7a8a;
+
+  /* Accent — Neon Yeşil ve Elektrik Mavisi */
+  --accent-1: #00e676;         /* Neon Green (Primary) */
+  --accent-2: #2979ff;         /* Electric Blue (Secondary) */
+  
+  /* Gradient (Butonlar için düz renk daha iyi durur ama gradient de kullanacağız) */
+  --accent-gradient: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+  --accent-soft: rgba(0, 230, 118, 0.15);
+  --accent-glow: rgba(0, 230, 118, 0.4);
+
+  /* Durum Renkleri */
+  --success: #00e676;
+  --error: #ff3b3b;
+  --warning: #ffb300;
+  --info: #2979ff;
+
+  /* Tipografi */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Boşluklar */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Yarıçaplar */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* Gölgeler */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+
+  /* Geçişler */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --topbar-height: 64px;
+}
+
+/* ---------- 2. LIGHT TEMA (İsteyenler için uyarlanmış) ---------- */
+[data-theme="light"] {
+  --bg-primary: #f5f5f7;
+  --bg-secondary: #ffffff;
+  --bg-elevated: #eeeeee;
+  --bg-hover: #e2e2e6;
+  --border: #d1d1d6;
+  --border-strong: #b0b0b8;
+
+  --text-primary: #111111;
+  --text-secondary: #4a4a55;
+  --text-muted: #7a7a8a;
+
+  --accent-1: #00b859; /* Light modda biraz daha koyu yeşil */
+  --accent-soft: rgba(0, 184, 89, 0.1);
+  --shadow-glow: 0 0 20px rgba(0, 184, 89, 0.2);
+}
+
+/* ---------- 3. RESET ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+img, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800; /* 1win stili: ekstra kalın başlıklar */
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-1);
+  outline-offset: 2px;
+}
+
+/* ---------- 4. LAYOUT ---------- */
+body {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-areas: "sidebar main";
+}
+
+@media (max-width: 1023px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-areas: "main";
+  }
+}
+
+/* ---------- 5. SIDEBAR ---------- */
+.sidebar {
+  grid-area: sidebar;
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: var(--space-5) var(--space-4);
+  gap: var(--space-5);
+  overflow-y: auto;
+  z-index: 40;
+  transition: transform var(--transition-slow);
+}
+
+/* ---------- 6. MAIN ---------- */
+.main {
+  grid-area: main;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main__content {
+  flex: 1;
+  padding: var(--space-8);
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 639px) {
+  .main__content {
+    padding: var(--space-4);
+  }
+}
+
+/* ---------- 7. TOPBAR ---------- */
+.topbar {
+  display: none;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--topbar-height);
+  padding: 0 var(--space-4);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.topbar__title {
+  font-weight: 800;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 1023px) {
+  .topbar { display: flex; }
+}
+
+/* ---------- 8. BACKDROP ---------- */
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 35;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.backdrop.is-active {
+  display: block;
+  opacity: 1;
+}
+
+/* ---------- 9. ANİMASYONLAR ---------- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

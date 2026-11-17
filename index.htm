@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DevPocket — A modern, fast, and free collection of developer tools. JSON formatter, Base64, UUID, color picker, and more." />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>DevPocket — Developer Tools</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- Fonts: preconnect ile hızlandırıyoruz -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Stiller -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+
+<body>
+  <!-- ============================================================
+       MOBİL İÇİN BACKDROP: sidebar açıldığında arkasını karartır
+       ============================================================ -->
+  <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       SIDEBAR: Logo, arama, favoriler, son kullanılanlar, tüm araçlar
+       ============================================================ -->
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <!-- Logo -->
+    <div class="sidebar__brand">
+      <a href="#/" class="brand" aria-label="DevPocket home">
+        <span class="brand__icon" aria-hidden="true">
+          <!-- Inline SVG: cep boyutunda kod ikonu (Lucide "code-2" stili) -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </span>
+        <span class="brand__text">Dev<strong>Pocket</strong></span>
+      </a>
+      <!-- Mobil için kapatma butonu -->
+      <button class="icon-btn sidebar__close" id="sidebarClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Arama (sidebar içi, ⌘K kısayoluyla da açılır) -->
+    <div class="sidebar__search">
+      <div class="search">
+        <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="searchInput"
+          class="search__input"
+          placeholder="Search tools…"
+          aria-label="Search tools"
+          autocomplete="off"
+        />
+        <kbd class="search__kbd">⌘K</kbd>
+      </div>
+    </div>
+
+    <!-- Navigasyon grupları (JS ile dinamik doldurulacak) -->
+    <nav class="sidebar__nav" aria-label="Tools">
+      <!-- Favorites -->
+      <div class="nav-group" data-group="favorites">
+        <div class="nav-group__title">
+          <svg class="nav-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Favorites</span>
+        </div>
+        <ul class="nav-list" id="favoritesList"></ul>
+        <p class="nav-empty" id="favoritesEmpty">No favorites yet. Star a tool to pin it here.</p>
+      </div>
+
+      <!-- Recent -->
+      <div class="nav-group" data-group="recent">
+        <div class="nav-group__title">
+          <svg class="nav-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Recent</span>
+        </div>
+        <ul class="nav-list" id="recentList"></ul>
+        <p class="nav-empty" id="recentEmpty">Recently used tools will appear here.</p>
+      </div>
+
+      <!-- All tools -->
+      <div class="nav-group" data-group="all">
+        <div class="nav-group__title">
+          <svg class="nav-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>All Tools</span>
+        </div>
+        <ul class="nav-list" id="allToolsList"></ul>
+      </div>
+    </nav>
+
+    <!-- Sidebar alt kısım: Tema toggle -->
+    <div class="sidebar__footer">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-toggle__track">
+          <span class="theme-toggle__thumb">
+            <!-- Sun icon -->
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <!-- Moon icon -->
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </span>
+        <span class="theme-toggle__label">Dark mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       ANA İÇERİK
+       ============================================================ -->
+  <main class="main" id="main">
+    <!-- Üst bar (mobil): hamburger + logo -->
+    <header class="topbar">
+      <button class="icon-btn" id="menuToggle" aria-label="Open menu" aria-controls="sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <span class="topbar__title">DevPocket</span>
+    </header>
+
+    <!-- Router buraya içerik basar -->
+    <div class="main__content" id="app">
+      <!-- İlk yüklemede JS tarafından doldurulur -->
+    </div>
+  </main>
+
+  <!-- ============================================================
+       TOAST KONTEYNERİ (sağ altta yığılır)
+       ============================================================ -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ============================================================
+       MODAL KONTEYNERİ (snippet editör vb. için)
+       ============================================================ -->
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__panel" role="document">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Modal</h2>
+        <button class="icon-btn" data-close-modal aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCRIPT YÜKLEME SIRASI (önemli!)
+       1. utils  → yardımcılar, diğer herkes kullanır
+       2. storage → LS wrapper
+       3. registry → tool metadata (tools'ları import eder)
+       4. ui → sidebar, tema, toast
+       5. router → hash routing
+       6. app → başlatıcı
+       7. tools/* → her araç kendi dosyasında, registry'ye kayıt
+       ============================================================ -->
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tools/json-formatter.js"></script>
+  <script src="js/tools/base64.js"></script>
+  <script src="js/tools/url-encoder.js"></script>
+  <script src="js/tools/color-picker.js"></script>
+  <script src="js/tools/uuid-generator.js"></script>
+  <script src="js/tools/lorem-ipsum.js"></script>
+  <script src="js/tools/markdown-previewer.js"></script>
+  <script src="js/tools/snippet-manager.js"></script>
+  <script src="js/tools/text-counter.js"></script>
+  <script src="js/tools/timestamp-converter.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
